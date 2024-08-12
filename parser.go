@@ -120,6 +120,37 @@ func ParseAddress(countryCode, address string, config ...Config) (ParsedAddress,
 			City:   locationParts[1],
 		}, nil
 	}
+	if countryCode == it && newlinesCount == 1 {
+		parts := strings.Split(address, "\n")
+		street := strings.TrimSpace(parts[0])
+		locationParts := strings.Split(parts[1], " ")
+		zip := locationParts[0]
+		city := locationParts[1]
+		return ParsedAddress{
+			Street: strings.TrimSpace(street),
+			City:   strings.TrimSpace(city),
+			Zip:    strings.TrimSpace(zip),
+		}, nil
+	}
+	if countryCode == ro {
+		parts := strings.Split(address, "\n")
+		if newlinesCount == 1 {
+			street := strings.TrimSpace(parts[1])
+			city := strings.TrimSpace(parts[0])
+			return ParsedAddress{
+				Street: strings.TrimSpace(street),
+				City:   strings.TrimSpace(city),
+			}, nil
+		}
+		if newlinesCount == 2 {
+			street := strings.TrimSpace(parts[2]) + ", " + strings.TrimSpace(parts[1])
+			city := strings.TrimSpace(parts[0])
+			return ParsedAddress{
+				Street: strings.TrimSpace(street),
+				City:   strings.TrimSpace(city),
+			}, nil
+		}
+	}
 	if countryCode == sk {
 		if newlinesCount == 1 {
 			var city, zip string
